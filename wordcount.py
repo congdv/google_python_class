@@ -10,7 +10,7 @@ def read_file(file_name):
                 word_count[word] = 1
             else:
                 word_count[word] = word_count[word] + 1
-    for word in word_count:
+    for word in sorted(word_count):
         print word + ' %d'%word_count[word]
 def main():
     if len(sys.argv) == 2:
