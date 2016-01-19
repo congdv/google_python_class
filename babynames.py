@@ -1,6 +1,7 @@
 #!/usr/bin/python2.7
 import re
 from sys import argv
+import os
 
 def values(items):
     return items[1]
@@ -30,7 +31,7 @@ def print_ranked(names,default=True):
 def argv_input():
     if len(argv) == 1:
         return 1
-    elif len(argv) == 3:
+    elif len(argv) >= 3:
         return 2
     else:
         return 3
@@ -41,6 +42,12 @@ def write_file_name(names,file_name):
     f.close()
 def help():
     print "HELP: 2 argument: file name for read,file name format for write \n 0 argument: for print default count "
+def file_path(name_format):
+    _file = []
+    for name in os.listdir("."):
+        if re.match(name_format,name):
+            _file.append(name)
+    return _file
 def main():
     _input = argv_input()
     if _input == 1:
@@ -48,14 +55,25 @@ def main():
         return
     elif _input == 2:
         file_name = argv[1]
-        ext = argv[2]
-        content = read_file(file_name)
-        baby_names = find_name(content)
-        write_file_name(baby_names,file_name+"."+ext)
+        """
+        if not os.path.isdir(file_name):
+            print "This file isn't exist"
+            return
+        """
+        _file = file_path(file_name)
+        if len(_file) == 0:
+            print "This file isn't exist"
+            return
+        _len_name = len(argv)
+        ext = argv[len(argv)-1]
+        for i in range(1,_len_name -1):
+            content = read_file(argv[i])
+            baby_names = find_name(content)
+            write_file_name(baby_names,argv[i]+"."+ext)
     else:
         file_name = "babyname2014.html"
         content = read_file(file_name)
         baby_names = find_name(content)
-        print_ranked(baby_names)
+        #print_ranked(baby_names)
 if __name__ == '__main__':
     main()
